@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const cors = require("cors")
 
+const authRoutes = require("./routes/auth")
 const userRoutes = require("./routes/user")
 const fileUpload = require("express-fileupload");
 const {dbConnect} = require("./config/database");
@@ -35,7 +36,10 @@ app.use(
 cloudinaryConnect();
 
 // mounting
+app.use("/api/v1/auth",authRoutes);
 app.use("/api/v1/user",userRoutes);
+
+
 
 // start server
 app.listen(PORT, () => {

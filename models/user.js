@@ -29,7 +29,7 @@ additionalInfo:{
 },
 contact:[{
     type:mongoose.Schema.Types.ObjectId,
-    ref:"Chat"
+    ref:"User"
 }],
 block:[{
     type:mongoose.Schema.Types.ObjectId,

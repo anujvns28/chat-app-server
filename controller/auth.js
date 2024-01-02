@@ -6,6 +6,8 @@ const jwt = require("jsonwebtoken")
 const otpGenartor = require("otp-generator");
 const sendMail = require("../utils/mailSender");
 const { uploadImageToCloudinary } = require("../utils/imageUploader");
+const crypto = require("crypto")
+
 
 
 exports.sendOtp = async(req,res) =>{
@@ -91,15 +93,14 @@ exports.signup = async(req,res) =>{
 try{
 // fetch data
 const {email,name,password,confirmPassword,otp,} = req.body;
-let {image} = req.body;
+
+let image = req.body.image;
 let imageUrl
 
 
 if(image === undefined){
     image = req.files.image
 }
-
-console.log(image,"this is req.body")
 
 // vallidation
 if (!email || !name || !password || !confirmPassword || !otp ) {
@@ -134,6 +135,7 @@ if(otp !== dbOtp.otp){
         message: "Invallid Otp"
     }) 
 }
+const uuid = crypto.randomUUID()
 const hasedPassword = await bcrypt.hash(password, 10)
 
       // additional info
@@ -160,7 +162,8 @@ const hasedPassword = await bcrypt.hash(password, 10)
             email: email,
             password: hasedPassword,
             image: imageUrl,
-            additionalInfo: profile._id
+            additionalInfo: profile._id,
+            token: uuid
         }
 
         // creading data in deb

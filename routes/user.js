@@ -1,19 +1,13 @@
 const express = require("express");
 const router = express.Router();
 
-const { signup, getUser, sendOtp, login } = require("../controller/auth");
+const { sendFraindRequest, acceptFraindRequest } = require("../controller/user");
 
 
-
-
-// signup
-router.post("/signup",signup)
-// geting otp
-router.post("/getOtp",sendOtp)
-// login user
-router.post("/login",login)
-
-router.post("/getUser",getUser)
+// send fraind requst
+router.post("/sendRequest",sendFraindRequest)
+// accept reques
+router.post("/acceptRequest",acceptFraindRequest)
 
 
 module.exports = router
