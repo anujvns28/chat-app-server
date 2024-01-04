@@ -56,7 +56,8 @@ exports.sendFraindRequest = async(req,res) =>{
 
         return res.status(200).json({
             success:true,
-            message:"Fraind Request successfully"
+            message:"Fraind Request successfully",
+            data: user
         })
         
 
@@ -97,7 +98,19 @@ exports.acceptFraindRequest = async(req,res) => {
                 success :false,
                 message: "Sender is not vallied user"
             })
-        }    
+        } 
+    
+    if(sender){
+            const senderId = sender._id
+            if(reciver.contact.includes(senderId)){
+                return res.status(500).json({
+                    success :false,
+                    message: "You are alredy accept This Fraind request"
+                })  
+            }
+    }
+    
+        
 
     //update sender
     await User.findOneAndUpdate({token:token},{
@@ -127,4 +140,40 @@ exports.acceptFraindRequest = async(req,res) => {
             message:"Error occuring in Accepting fraind request"
         })   
     }
+}
+
+// get all user in contact list
+exports.getAllContact = async(req,res) => {
+try{
+    // fetching data
+    const {userId} = req.body
+    
+    if(!userId){
+        return res.status(400).json({
+            success:false,
+            message:"UserId is required"
+        })
+    }
+
+    const user = await User.findById(userId).populate("contact").exec();
+    if(!user){
+        return res.status(400).json({
+            success:false,
+            message:"Your are not vallied user"
+        })
+    }
+
+    return res.status(200).json({
+        success:true,
+        message:"fetched successfully",
+        data:user.contact
+    })
+
+}catch(err){
+    console.log(err)
+    return res.status(400).json({
+        success:false,
+        message:"Error occuring in fetching contacts"
+    })   
+}
 }
