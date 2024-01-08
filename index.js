@@ -4,6 +4,7 @@ const cors = require("cors")
 
 const authRoutes = require("./routes/auth")
 const userRoutes = require("./routes/user")
+const chatRoutes = require("./routes/chat")
 const fileUpload = require("express-fileupload");
 const {dbConnect} = require("./config/database");
 const {cloudinaryConnect} = require("./config/cloudnery")
@@ -38,6 +39,7 @@ cloudinaryConnect();
 // mounting
 app.use("/api/v1/auth",authRoutes);
 app.use("/api/v1/user",userRoutes);
+app.use("/api/v1/chat",chatRoutes)
 
 
 
