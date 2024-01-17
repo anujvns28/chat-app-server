@@ -29,12 +29,20 @@ additionalInfo:{
 },
 contact:[{
     type:mongoose.Schema.Types.ObjectId,
-    ref:"User"
+    ref:"User"   
+}],
+group:[{
+    type:mongoose.Schema.Types.ObjectId,
+    ref:"Group"   
 }],
 block:[{
     type:mongoose.Schema.Types.ObjectId,
     ref:"User"
-}]
+}],
+isGroup:{
+    type:Boolean,
+    default:false
+}
 
 })
 
