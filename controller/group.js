@@ -2,14 +2,13 @@ const Group = require("../models/group");
 const User = require("../models/user");
 const { uploadImageToCloudinary } = require("../utils/imageUploader");
 
-
+// creating group
 exports.createGroup = async(req,res) => {
     try{
     //fetching data
     console.log("habibi come to banars")
     const {groupName,members,groupDesc,userId} = req.body;
 
-    console.log(typeof(members))
 
     //vallidation
     if(!groupName || !members || !groupDesc || !userId){
@@ -35,29 +34,29 @@ exports.createGroup = async(req,res) => {
     }else{
         imageUrl = image
     }
-
-    // push group id in user contact
-    members.map(async(mem) => {
-        await  User.findByIdAndUpdate(mem,{
-        $push : {
-            group : mem
-        }
-       },{new:true})
-    })
-
-    
+ 
     // create grooup
      const groupPayload = {
          groupName : groupName,
         groupDesc : groupDesc,
-        groupImg : imageUrl,
         members : members,
+        groupImg : imageUrl,
         admin : userId,
     }
 
     const group = await Group.create(groupPayload);
 
-    console.log(group)
+    // push group id in member groups
+    members.map(async(mem) => {
+        await  User.findByIdAndUpdate(mem,{
+        $push : {
+            group : group._id
+        }
+       },{new:true})
+    })
+
+    
+
 
     return res.status(200).json({
         success : true,
@@ -70,6 +69,46 @@ exports.createGroup = async(req,res) => {
         return res.status(500).json({
             success:false,
             message:"Error occured in creating group"
+        })
+    }
+}
+
+
+// fetching group
+exports.fetchGroup = async(req,res) => {
+    try{
+    // fetching data
+    const {userId} = req.body;
+    
+    if(!userId){
+        return res.status(500).json({
+            success:false,
+            message:"userid is required"
+        })  
+    }
+
+    const user = await User.findById(userId).populate("group").exec();
+
+    if(!user){
+        return res.status(500).json({
+            success:false,
+            message:"you are not vallied user"
+        })    
+    }
+
+    // return res
+    return res.status(200).json({
+        success:false,
+        message:true,
+        data:user.group
+    })
+
+
+    }catch(err){
+        console.log(err);
+        return res.status(500).json({
+            success:false,
+            message:"Error occured in fetching group"
         })
     }
 }

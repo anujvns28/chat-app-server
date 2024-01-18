@@ -3,14 +3,17 @@ const Chat = require("../models/chat");
 
 exports.createChat = async(req,res) => {
     try{
-    const {userId,chatId,msz} = req.body;
-    if(!userId  || !chatId || !msz){
+    const {userId,chat,msz} = req.body;
+    let member = [...chat];
+    console.log(member,"this are members")
+    if(!userId  || !chat || !msz){
         return res.status(400).json({
             success:false,
             message:"All filds are required"
         })
     }
 
+    
     const user = User.findById(userId);
     if(!user){
         return res.status(400).json({
@@ -18,20 +21,21 @@ exports.createChat = async(req,res) => {
             message:"You are not vallid user"
         }) 
     }
+
     
     const chatPayload = {
         msz : msz,
         senderId : userId,
-        users : [userId,chatId]
+        users : typeof(chat) == "object" ? member : [userId,chat]
     }
 
-    const chat = await Chat.create(chatPayload);
-    console.log(chat)
+    const message = await Chat.create(chatPayload);
+    console.log(message)
 
     return res.status(200).json({
         success:true,
         message:"msz send successfully",
-        msz : chat
+        msz : message
     })
 
    }catch(err){
@@ -45,8 +49,10 @@ exports.createChat = async(req,res) => {
 
 exports.fetchedChat = async(req,res) => {
     try{
-    const {userId,chatId} = req.body;
-    if(!userId || !chatId) {
+    const {userId,chat} = req.body;
+    let messages
+   
+    if(!userId || !chat) {
         return res.status(400).json({
             success:false,
             message:"userId is required"
@@ -60,19 +66,29 @@ exports.fetchedChat = async(req,res) => {
             message:"You are not vallid user"
         }) 
     }
+    
+    if(typeof(chat) !== "object"){
+         messages = await Chat.find({
+            users : {
+                $all : [userId,chat]
+            }
+        })
+    }else{
+         messages = await Chat.find({
+            users : {
+                $eq :  chat
+            }
+        })
+    }
 
-    const chats = await Chat.find({
-        users : {
-            $all : [userId,chatId]
-        }
-    })
+    
 
-    console.log(chats)
+    //console.log(messages)
 
     return res.status(200).json({
         success:true,
         message:"Chat fetched successfully",
-        chats:chats
+        chats:messages
     })
 
     }catch(err){

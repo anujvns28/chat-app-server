@@ -11,6 +11,7 @@ const groupSchema = new mongoose.Schema({
     },
     groupDesc : {
         type:String,
+        default:null
     },
     members : [{
         type:mongoose.Schema.Types.ObjectId,

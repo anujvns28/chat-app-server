@@ -146,7 +146,7 @@ const hasedPassword = await bcrypt.hash(password, 10)
         about:null
       }
 
-     const profile = await Profile.create(profilePayload);
+    const profile = await Profile.create(profilePayload);
 
     if(typeof(image)=== "object"){
         console.log("printing  url jiii")
