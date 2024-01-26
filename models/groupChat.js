@@ -1,12 +1,12 @@
 
 const mongoose = require("mongoose");
 
-const chatSchema = new mongoose.Schema({
+const groupChatSchema = new mongoose.Schema({
     msz: {
         type:String,
         required:true,
     },
-    users :Array,
+    users : Array,
 
      senderId: {
         type :mongoose.Schema.Types.ObjectId,
@@ -19,4 +19,4 @@ const chatSchema = new mongoose.Schema({
 
 })
 
-module.exports = mongoose.model("Chat", chatSchema)
+module.exports = mongoose.model("Chat", groupChatSchema)

@@ -177,3 +177,151 @@ try{
     })   
 }
 }
+
+// block user
+exports.blockUser = async(req,res) => {
+    try{
+     const {userId,chatId} = req.body;
+     
+     if (!userId,!chatId) {
+        return res.status(400).json({
+            success: false,
+            message: "All filds are required"
+        })
+    }
+
+    const userData = await User.findById(userId);
+    const chatData = await User.findById(chatId);
+
+    // console.log(chatData)
+
+    if(!userData){
+        return res.status(400).json({
+            success: false,
+            message: "You aer not vallid user"
+        }) 
+    }
+
+    if(!chatData){
+        return res.status(400).json({
+            success: false,
+            message: "Chat is not vallid user"
+        }) 
+    }
+
+    // push user id in block array
+    await User.findByIdAndUpdate(userId,{
+        $push : {
+           block :  {user: chatId, isYouBlock : true}
+        }
+    },({new:true}))
+
+    await User.findByIdAndUpdate(chatId,{
+        $push : {
+           block : {user: userId, isYouBlock :false} 
+        }
+    },({new:true}))
+
+    
+    return res.status(200).json({
+        success : true,
+        message : "User blocked successfull",
+       
+    })
+
+
+    }catch(err){
+    console.log(err)
+    return res.status(400).json({
+        success:false,
+        message:"Error blocking chat"
+    })   
+}
+}
+
+// block user
+exports.unBlockUser = async(req,res) => {
+    try{
+     const {userId,chatId} = req.body;
+     
+     if (!userId,!chatId) {
+        return res.status(400).json({
+            success: false,
+            message: "All filds are required"
+        })
+    }
+
+    const userData = await User.findById(userId);
+    const chatData = await User.findById(chatId);
+
+    // console.log(chatData)
+
+    if(!userData){
+        return res.status(400).json({
+            success: false,
+            message: "You aer not vallid user"
+        }) 
+    }
+
+    if(!chatData){
+        return res.status(400).json({
+            success: false,
+            message: "Chat is not vallid user"
+        }) 
+    }
+
+    // push user id in block array
+    await User.findByIdAndUpdate(userId,{
+        $pull : {
+           block : {user : chatId} 
+        }
+    },({new:true}))
+
+    await User.findByIdAndUpdate(chatId,{
+        $pull : {
+           block : {user : userId} 
+        }
+    },({new:true}))
+
+
+    
+    return res.status(200).json({
+        success : true,
+        message : "User unblocked successfull",
+       
+    })
+
+
+    }catch(err){
+    console.log(err)
+    return res.status(400).json({
+        success:false,
+        message:"Error unblocking chat"
+    })   
+}
+}
+
+exports.getUser = async(req,res) =>{
+    try{
+   const userId = req.body.userId;
+
+   const user = await User.findById(userId).populate("contact").exec();
+
+   console.log(user)
+
+   
+   return res.status(200).json({
+    success: true,
+    message: "User response",
+    data: user,
+
+})
+
+    }catch(err){
+        console.log(err)
+        return res.status(500).json({
+            success: false,
+            message: "error occuring in sending resustring user",
+        })  
+    }
+}

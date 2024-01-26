@@ -1,12 +1,21 @@
 const express = require("express");
 const router = express.Router();
 
-const {createChat ,fetchedChat} = require("../controller/chat")
+const {
+    createGroupChat,
+    fetchGroupChat,
+    createOneOneChat,
+    fetchOneoneChat
+} = require("../controller/chat")
 
-// send msg
-router.post("/sendMsz",createChat)
+//send one one msg
+router.post("/sendOneOneMsz",createOneOneChat)
+// send group msg
+router.post("/sendGroupMsz",createGroupChat)
 // fetched chats
-router.post("/fetchedChat",fetchedChat)
+router.post("/fetchGroupChat",fetchGroupChat)
+// fetched one one chats
+router.post("/fetchOneOneChats",fetchOneoneChat)
 
 
 

@@ -35,15 +35,12 @@ group:[{
     type:mongoose.Schema.Types.ObjectId,
     ref:"Group"   
 }],
-block:[{
-    type:mongoose.Schema.Types.ObjectId,
-    ref:"User"
-}],
+ block:Array,
+
 isGroup:{
     type:Boolean,
     default:false
 }
-
 })
 
 module.exports = mongoose.model("User",userSchema)

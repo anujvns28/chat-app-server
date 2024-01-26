@@ -248,27 +248,3 @@ const hasedPassword = await bcrypt.hash(password, 10)
 
 
 
-exports.getUser = async(req,res) =>{
-    try{
-   const userId = req.body.userId;
-
-   const user = await User.findById(userId).populate("contact").populate("block").exec();
-
-   console.log(user)
-
-   
-   return res.status(200).json({
-    success: true,
-    message: "entry created",
-    data: user,
-
-})
-
-    }catch(err){
-        console.log(err)
-        return res.status(500).json({
-            success: false,
-            message: "error occuring in sending resustring user",
-        })  
-    }
-}

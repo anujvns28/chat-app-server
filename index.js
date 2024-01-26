@@ -64,38 +64,31 @@ const io = new Server(server, {
   io.on('connection', (socket) => {
     global.chatSocket = socket
 
-    //console.log('a user connected',socket.id);
-    
-     socket.on("add-user",(data) => {
+        socket.on("add-user",(data) => {
         onlineUser.set(data.userId,socket.id)
+        console.log('a user connected',data.userName,socket.id);
+    })
 
-        socket.join(onlineUser.get(data.userId));
-        
-     })
-
-    socket.on("msz",(data) => {
-        if(typeof(data.chatId)== "object"){
-           data.chatId.map((user) => {
-            const userSocket = onlineUser.get(user);
-            socket.join(userSocket)
-            console.log(io.sockets.adapter.rooms.get(userSocket),"sokcets number");
-            io.sockets.in(userSocket).emit("msg-recive",data)
-           })
-        }else{
+    socket.on("msz",(data) => { 
+          if(typeof(data.chatId) !== "object"){
             const userSocket = onlineUser.get(data.chatId);
-            socket.join(userSocket)
+            if(userSocket){
+              socket.join(userSocket);
+          }
+            console.log(io.sockets.adapter.rooms.get(userSocket),"sokcets number before");
+            io.sockets.in(userSocket).emit("msg-recive",data)
+          }else{
+            let userSocket
+            console.log(data)
+            data.chatId.members.map((user) => {
+               userSocket = onlineUser.get(user);
+                if(userSocket){
+                    socket.join(userSocket);
+                }
+            })
             console.log(io.sockets.adapter.rooms.get(userSocket),"sokcets number");
             io.sockets.in(userSocket).emit("msg-recive",data)
-        }
-        
-
-        
-
-     
-            
-            //socket.to(userSocket).emit("msg-recive",data)
-           
-       
+          }
     })
 
   });
