@@ -7,7 +7,10 @@ const {
     getAllContact,
     blockUser,
     getUser,
-    unBlockUser 
+    unBlockUser, 
+    deleteUser,
+    addUserInConatact,
+    getAllUser
     } = require("../controller/user");
 
 
@@ -23,6 +26,12 @@ router.post("/blockUser",blockUser)
 router.post("/unBlockUser",unBlockUser)
 // get userData
 router.post("/getUser",getUser)
+// delete user
+router.post("/deleteUser",deleteUser);
+// add userin contact
+router.post("/addUserinContact",addUserInConatact);
+// get all user
+router.post("/getAllUsers",getAllUser);
 
 
 module.exports = router

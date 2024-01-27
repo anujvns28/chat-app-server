@@ -36,6 +36,11 @@ group:[{
     ref:"Group"   
 }],
  block:Array,
+ 
+allUser:[{
+    type:mongoose.Schema.Types.ObjectId,
+    ref:"User"
+}],
 
 isGroup:{
     type:Boolean,

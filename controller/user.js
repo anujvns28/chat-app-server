@@ -115,7 +115,8 @@ exports.acceptFraindRequest = async(req,res) => {
     //update sender
     await User.findOneAndUpdate({token:token},{
         $push : {
-           contact : userId 
+           contact : userId,
+           allUser : userId 
         }
     },{new:true})
 
@@ -123,7 +124,8 @@ exports.acceptFraindRequest = async(req,res) => {
     const senderId = sender._id
     await User.findByIdAndUpdate(userId,{
         $push : {
-           contact : senderId 
+           contact : senderId,
+           allUser : userId
         }
     },{new:true})
 
@@ -325,3 +327,151 @@ exports.getUser = async(req,res) =>{
         })  
     }
 }
+
+// delete user
+exports.deleteUser = async(req,res) => {
+    try{
+        const {userId,chatId} = req.body;
+     
+        if (!userId,!chatId) {
+           return res.status(400).json({
+               success: false,
+               message: "All filds are required"
+           })
+       }
+   
+       const userData = await User.findById(userId);
+       const chatData = await User.findById(chatId);
+   
+       // console.log(chatData)
+   
+       if(!userData){
+           return res.status(400).json({
+               success: false,
+               message: "You aer not vallid user"
+           }) 
+       }
+   
+       if(!chatData){
+           return res.status(400).json({
+               success: false,
+               message: "Chat is not vallid user"
+           }) 
+       }
+   
+       // pull user id in block array
+       await User.findByIdAndUpdate(userId,{
+           $pull : {
+              contact : chatId
+           }
+       },({new:true}))
+       
+       return res.status(200).json({
+           success : true,
+           message : "User deleted successfull",
+       })
+   
+    }catch(err){
+        console.log(err)
+        return res.status(500).json({
+            success: false,
+            message: "error occuring in Deleting  user",
+        })  
+    }
+}
+
+// add user in contact
+exports.addUserInConatact = async(req,res) => {
+    try{
+        const {userId,chatId} = req.body;
+     
+        if (!userId,!chatId) {
+           return res.status(400).json({
+               success: false,
+               message: "All filds are required"
+           })
+       }
+   
+       const userData = await User.findById(userId);
+       const chatData = await User.findById(chatId);
+   
+       // console.log(chatData)
+   
+       if(!userData){
+           return res.status(400).json({
+               success: false,
+               message: "You aer not vallid user"
+           }) 
+       }
+   
+       if(!chatData){
+           return res.status(400).json({
+               success: false,
+               message: "Chat is not vallid user"
+           }) 
+       }
+
+       if(userData.contact.includes(chatId)){
+        return res.status(400).json({
+            success: false,
+            message: "user is alredy in your contact"
+        }) 
+       }
+   
+       // puss user id in block array
+       await User.findByIdAndUpdate(userId,{
+           $push : {
+              contact : chatId
+           }
+       },({new:true}))
+       
+       return res.status(200).json({
+           success : true,
+           message : "User deleted successfull",
+       })
+   
+    }catch(err){
+        console.log(err)
+        return res.status(500).json({
+            success: false,
+            message: "error occuring in Deleting  user",
+        })  
+    }
+} 
+
+// get all user in allUser list
+exports.getAllUser = async(req,res) => {
+    try{
+        // fetching data
+        const {userId} = req.body
+        
+        if(!userId){
+            return res.status(400).json({
+                success:false,
+                message:"UserId is required"
+            })
+        }
+    
+        const user = await User.findById(userId).populate("allUser").exec();
+        if(!user){
+            return res.status(400).json({
+                success:false,
+                message:"Your are not vallied user"
+            })
+        }
+    
+        return res.status(200).json({
+            success:true,
+            message:"fetched successfully",
+            data:user
+        })
+    
+    }catch(err){
+        console.log(err)
+        return res.status(400).json({
+            success:false,
+            message:"Error occuring in fetching allUser"
+        })   
+    }
+    }
+
