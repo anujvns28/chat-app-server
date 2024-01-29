@@ -209,3 +209,231 @@ exports.commonGroup = async (req, res) => {
         })
     }
 }
+
+// exist in group
+exports.exitUser = async(req,res) => {
+    try{
+        const {userId,groupId} = req.body;
+     
+        if (!userId || !groupId) {
+           return res.status(400).json({
+               success: false,
+               message: "All filds are required"
+           })
+       }
+   
+       const userData = await User.findById(userId);
+       const groupData = await Group.findById(groupId);
+   
+       // console.log(chatData)
+   
+       if(!userData){
+           return res.status(400).json({
+               success: false,
+               message: "You aer not vallid user"
+           }) 
+       }
+   
+       if(!groupData){
+           return res.status(400).json({
+               success: false,
+               message: "Chat is not vallid user"
+           }) 
+       }
+   
+       // pull user id in block array
+       await User.findByIdAndUpdate(userId,{
+           $pull : {
+              group : groupId
+           }
+       },({new:true}))
+
+       // pull userid in group member section
+       await Group.findByIdAndUpdate(groupId,{
+           $pull : {
+            members : userId
+           }
+       },{new:true})
+       
+       return res.status(200).json({
+           success : true,
+           message : " you are successfull exist in the group",
+       })
+   
+    }catch(err){
+        console.log(err)
+        return res.status(500).json({
+            success: false,
+            message: "error occuring in Deleting  user",
+        })  
+    }
+}
+
+
+// add group members
+exports.addGroupMember = async(req,res) => {
+    try{
+        const {userId,groupId,members} = req.body;
+        console.log(req.body)
+     
+        if (!userId || !groupId || !members ) {
+           return res.status(400).json({
+               success: false,
+               message: "All filds are required"
+           })
+       }
+   
+       const userData = await User.findById(userId);
+       const groupData = await Group.findById(groupId);
+   
+       // console.log(chatData)
+   
+       if(!userData){
+           return res.status(400).json({
+               success: false,
+               message: "You aer not vallid user"
+           }) 
+       }
+   
+       if(!groupData){
+           return res.status(400).json({
+               success: false,
+               message: "This is not vallied group"
+           }) 
+       }
+   
+       // pull user id in block array
+       members.map( async(userId) => {
+        await User.findByIdAndUpdate(userId,{
+            $push : {
+               group : groupId
+            }
+        },({new:true}))
+       })
+
+       // pull userid in group member section
+       members.map(async(userId) =>{
+        await Group.findByIdAndUpdate(groupId,{
+            $push : {
+             members : userId
+            }
+        },{new:true})
+       })
+       
+       return res.status(200).json({
+           success : true,
+           message : " you are successfull exist in the group",
+       })
+   
+    }catch(err){
+        console.log(err)
+        return res.status(500).json({
+            success: false,
+            message: "error occuring in adding user in group",
+        })   
+    }
+}
+
+
+// make adimn
+exports.makeGroupAdmin = async (req, res) => {
+    try {
+        // fetching data
+        const { userId ,groupId} = req.body;
+
+        if (!userId || !groupId) {
+            return res.status(500).json({
+                success: false,
+                message: "all filds are rquired is required"
+            })
+        }
+
+        const user = await User.findById(userId);
+
+        if (!user) {
+            return res.status(500).json({
+                success: false,
+                message: "you are not vallied user"
+            })
+        }
+
+        const group = await Group.findById(groupId);
+        if (!group) {
+            return res.status(500).json({
+                success: false,
+                message: "you are not vallied user"
+            })
+        }
+
+        await Group.findByIdAndUpdate(groupId,{
+            $push: {
+               admin : userId 
+            }
+        },{new:true})
+
+        // return res
+        return res.status(200).json({
+            success: true,
+            message : "User is successfully made admin"
+        })
+
+
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json({
+            success: false,
+            message: "Error occured in fetching group"
+        })
+    }
+}
+
+exports.dismissGroupAdmin = async (req, res) => {
+    try {
+        // fetching data
+        const { userId ,groupId} = req.body;
+
+        if (!userId || !groupId) {
+            return res.status(500).json({
+                success: false,
+                message: "all filds are rquired is required"
+            })
+        }
+
+        const user = await User.findById(userId);
+
+        if (!user) {
+            return res.status(500).json({
+                success: false,
+                message: "you are not vallied user"
+            })
+        }
+
+        const group = await Group.findById(groupId);
+        if (!group) {
+            return res.status(500).json({
+                success: false,
+                message: "you are not vallied user"
+            })
+        }
+
+        await Group.findByIdAndUpdate(groupId,{
+            $pull: {
+               admin : userId 
+            }
+        },{new:true})
+
+        // return res
+        return res.status(200).json({
+            success: true,
+            message : "User is successfully made admin"
+        })
+
+
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json({
+            success: false,
+            message: "Error occured in fetching group"
+        })
+    }
+}

@@ -35,8 +35,9 @@ group:[{
     type:mongoose.Schema.Types.ObjectId,
     ref:"Group"   
 }],
+
  block:Array,
- 
+  
 allUser:[{
     type:mongoose.Schema.Types.ObjectId,
     ref:"User"

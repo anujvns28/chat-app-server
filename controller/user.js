@@ -125,7 +125,7 @@ exports.acceptFraindRequest = async(req,res) => {
     await User.findByIdAndUpdate(userId,{
         $push : {
            contact : senderId,
-           allUser : userId
+           allUser : senderId
         }
     },{new:true})
 
