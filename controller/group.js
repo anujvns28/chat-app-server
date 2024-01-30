@@ -437,3 +437,169 @@ exports.dismissGroupAdmin = async (req, res) => {
         })
     }
 }
+
+// change group img
+exports.changeGroupImg = async(req,res) => {
+    try{
+    // fetch img
+    const {groupId,userId} = req.body;
+
+    const groupImg = req.files.image;
+    if(!groupImg || !groupId || !userId ){
+        return res.status(500).json({
+            success:false,
+            message:"all filds are required"
+        })
+    }
+     
+    const user = await User.findById(userId);
+        if (!user) {
+            return res.status(500).json({
+                success: false,
+                message: "you are not vallied user"
+            })
+        }  
+
+    const group = await Group.findById(groupId);
+        if (!group) {
+            return res.status(500).json({
+                success: false,
+                message: "Group id is not vallied"
+            })
+        }
+    if(!group.admin.includes(userId)){
+        return res.status(500).json({
+            success: false,
+            message: "You are not admin"
+        })
+    } 
+
+    const img = await uploadImageToCloudinary(groupImg);
+
+    await Group.findByIdAndUpdate(groupId,{
+        groupImg : img.secure_url
+    },{new:true})
+
+    return res.status(200).json({
+        success:true,
+        message : "Group img updated successfull"
+    })
+
+    }catch (err) {
+        console.log(err);
+        return res.status(500).json({
+            success: false,
+            message: "Error occured in fetching group"
+        })
+    }
+}
+
+
+// change group name
+exports.changeGroupName = async(req,res) => {
+    try{
+    // fetch img
+    const {groupId,userId,groupName} = req.body;
+
+    
+    if(!groupName || !groupId || !userId ){
+        return res.status(500).json({
+            success:false,
+            message:"all filds are required"
+        })
+    }
+     
+    const user = await User.findById(userId);
+        if (!user) {
+            return res.status(500).json({
+                success: false,
+                message: "you are not vallied user"
+            })
+        }  
+
+    const group = await Group.findById(groupId);
+        if (!group) {
+            return res.status(500).json({
+                success: false,
+                message: "Group id is not vallied"
+            })
+        }
+    if(!group.admin.includes(userId)){
+        return res.status(500).json({
+            success: false,
+            message: "You are not admin"
+        })
+    } 
+
+    await Group.findByIdAndUpdate(groupId,{
+       groupName : groupName
+    },{new:true})
+
+    return res.status(200).json({
+        success:true,
+        message : "Group Name updated successfull"
+    })
+
+    }catch (err) {
+        console.log(err);
+        return res.status(500).json({
+            success: false,
+            message: "Error occured in chaenging group name"
+        })
+    }
+}
+
+// chenge group des
+exports.changeGroupDes = async(req,res) => {
+    try{
+    // fetch img
+    const {groupId,userId,groupDes} = req.body;
+
+
+    if(!groupDes || !groupId || !userId ){
+        return res.status(500).json({
+            success:false,
+            message:"all filds are required"
+        })
+    }
+     
+    const user = await User.findById(userId);
+        if (!user) {
+            return res.status(500).json({
+                success: false,
+                message: "you are not vallied user"
+            })
+        }  
+
+    const group = await Group.findById(groupId);
+        if (!group) {
+            return res.status(500).json({
+                success: false,
+                message: "Group id is not vallied"
+            })
+        }
+    if(!group.admin.includes(userId)){
+        return res.status(500).json({
+            success: false,
+            message: "You are not admin"
+        })
+    } 
+
+
+    await Group.findByIdAndUpdate(groupId,{
+        groupDesc : groupDes
+    },{new:true})
+
+    return res.status(200).json({
+        success:true,
+        message : "Group desc updated successfull"
+    })
+
+    }catch (err) {
+        console.log(err);
+        return res.status(500).json({
+            success: false,
+            message: "Error occured in updating  group desc"
+        })
+    }
+}

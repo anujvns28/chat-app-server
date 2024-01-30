@@ -9,7 +9,10 @@ const {
      exitUser,
      addGroupMember,
      makeGroupAdmin,
-     dismissGroupAdmin
+     dismissGroupAdmin,
+     changeGroupImg,
+     changeGroupName,
+     changeGroupDes
     } = require("../controller/group");
 
 // create group
@@ -27,6 +30,12 @@ router.post("/addUserInGroup",addGroupMember);
 // make group admin
 router.post("/makeroupAdmin",makeGroupAdmin);
 // dismiss group admin
-router.post("/dismissGroupAdmin",dismissGroupAdmin)
+router.post("/dismissGroupAdmin",dismissGroupAdmin);
+// change group img
+router.post("/changeGroupImg",changeGroupImg);
+// change group name
+router.post("/changeGroupName",changeGroupName);
+// change group desc
+router.post("/changeGroupDesc",changeGroupDes);
 
 module.exports = router
