@@ -5,9 +5,9 @@ const OneOneChat = require("../models/oneoneChat");
 
 exports.createGroupChat = async(req,res) => {
     try{
-    const {userId,groupMem,msz} = req.body;
+    const {userId,groupMem,msz,groupId} = req.body;
 
-    if(!userId  || !groupMem || !msz){
+    if(!userId  || !groupMem || !msz || !groupId){
         return res.status(400).json({
             success:false,
             message:"All filds are required"
@@ -27,7 +27,8 @@ exports.createGroupChat = async(req,res) => {
     const chatPayload = {
         msz : msz,
         senderId : userId,
-        users : groupMem
+       // users : groupMem
+       groupId : groupId
     }
 
     const message = await Groupchat.create(chatPayload);
@@ -69,10 +70,8 @@ exports.fetchGroupChat = async(req,res) => {
     
     
     let messages = await Groupchat.find({
-            users : {
-                $eq :  chat
-            }
-        })
+        groupId : chat
+    });
 
     return res.status(200).json({
         success:true,

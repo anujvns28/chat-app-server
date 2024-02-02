@@ -1,4 +1,5 @@
 const User = require("../models/user")
+const { uploadImageToCloudinary } = require("../utils/imageUploader")
 const sendMail = require("../utils/mailSender")
 
 
@@ -474,4 +475,134 @@ exports.getAllUser = async(req,res) => {
         })   
     }
     }
+
+
+    // change group img
+exports.changDp = async(req,res) => {
+    try{
+    // fetch img
+    const {userId} = req.body;
+
+    const groupImg = req.files.image;
+
+    console.log(req.body)
+    console.log(req.files)
+    if(!groupImg ||  !userId ){
+        return res.status(500).json({
+            success:false,
+            message:"all filds are required"
+        })
+    }
+     
+    const user = await User.findById(userId);
+        if (!user) {
+            return res.status(500).json({
+                success: false,
+                message: "you are not vallied user"
+            })
+        }  
+
+    const img = await uploadImageToCloudinary(groupImg);
+
+    const userData = await User.findByIdAndUpdate(userId,{
+        image : img.secure_url
+    },{new:true})
+
+    return res.status(200).json({
+        success:true,
+        message : "Dp updated successfull",
+        data : userData
+    })
+
+    }catch (err) {
+        console.log(err);
+        return res.status(500).json({
+            success: false,
+            message: "Error occured in updating group img"
+        })
+    }
+}
+
+
+// change user  name
+exports.changeUserName = async(req,res) => {
+    try{
+    // fetch img
+    const {userId,userName} = req.body;
+
+    
+    if( !userName || !userId ){
+        return res.status(500).json({
+            success:false,
+            message:"all filds are required"
+        })
+    }
+     
+    const user = await User.findById(userId);
+        if (!user) {
+            return res.status(500).json({
+                success: false,
+                message: "you are not vallied user"
+            })
+        }  
+
+  const userData =  await User.findByIdAndUpdate(userId,{
+       name : userName
+    },{new:true})
+
+    return res.status(200).json({
+        success:true,
+        message : "Group Name updated successfull",
+        data: userData
+    })
+
+    }catch (err) {
+        console.log(err);
+        return res.status(500).json({
+            success: false,
+            message: "Error occured in chaenging user name"
+        })
+    }
+}
+
+// chenge group des
+exports.changeUserAbout = async(req,res) => {
+    try{
+    // fetch img
+    const {userId,about} = req.body;
+
+
+    if(!about || !userId ){
+        return res.status(500).json({
+            success:false,
+            message:"all filds are required"
+        })
+    }
+     
+    const user = await User.findById(userId);
+        if (!user) {
+            return res.status(500).json({
+                success: false,
+                message: "you are not vallied user"
+            })
+        }  
+
+  const userData =  await User.findByIdAndUpdate(userId,{
+       about : about 
+    },{new:true})
+
+    return res.status(200).json({
+        success:true,
+        message : "user desc updated successfull",
+        data : userData
+    })
+
+    }catch (err) {
+        console.log(err);
+        return res.status(500).json({
+            success: false,
+            message: "Error occured in updating  user desc"
+        })
+    }
+}
 

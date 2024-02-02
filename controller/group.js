@@ -476,13 +476,14 @@ exports.changeGroupImg = async(req,res) => {
 
     const img = await uploadImageToCloudinary(groupImg);
 
-    await Group.findByIdAndUpdate(groupId,{
+    const groupData = await Group.findByIdAndUpdate(groupId,{
         groupImg : img.secure_url
     },{new:true})
 
     return res.status(200).json({
         success:true,
-        message : "Group img updated successfull"
+        message : "Group img updated successfull",
+        data : groupData
     })
 
     }catch (err) {
@@ -531,13 +532,14 @@ exports.changeGroupName = async(req,res) => {
         })
     } 
 
-    await Group.findByIdAndUpdate(groupId,{
+  const groupData =  await Group.findByIdAndUpdate(groupId,{
        groupName : groupName
     },{new:true})
 
     return res.status(200).json({
         success:true,
-        message : "Group Name updated successfull"
+        message : "Group Name updated successfull",
+        data: groupData
     })
 
     }catch (err) {
@@ -586,13 +588,14 @@ exports.changeGroupDes = async(req,res) => {
     } 
 
 
-    await Group.findByIdAndUpdate(groupId,{
+  const groupData =  await Group.findByIdAndUpdate(groupId,{
         groupDesc : groupDes
     },{new:true})
 
     return res.status(200).json({
         success:true,
-        message : "Group desc updated successfull"
+        message : "Group desc updated successfull",
+        data : groupData
     })
 
     }catch (err) {

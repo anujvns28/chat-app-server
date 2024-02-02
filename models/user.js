@@ -6,6 +6,11 @@ name:{
     required:true,
     trim:true
 },
+about : {
+    type:String,
+    required:true,
+    trim:true
+},
 email:{
     type:String,
     required:true,

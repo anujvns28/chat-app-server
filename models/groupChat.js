@@ -7,15 +7,18 @@ const groupChatSchema = new mongoose.Schema({
         required:true,
     },
     users : Array,
-
      senderId: {
         type :mongoose.Schema.Types.ObjectId,
         ref:"User"
     },
+    groupId : {
+        type :mongoose.Schema.Types.ObjectId,
+        ref:"Group"
+    },
     date:{
      type :Date,
      default : Date.now
-    }
+    },
 
 })
 

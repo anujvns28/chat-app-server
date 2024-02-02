@@ -10,7 +10,10 @@ const {
     unBlockUser, 
     deleteUser,
     addUserInConatact,
-    getAllUser
+    getAllUser,
+    changDp,
+    changeUserAbout,
+    changeUserName
     } = require("../controller/user");
 
 
@@ -32,6 +35,12 @@ router.post("/deleteUser",deleteUser);
 router.post("/addUserinContact",addUserInConatact);
 // get all user
 router.post("/getAllUsers",getAllUser);
+// change group img
+router.post("/changeUserImage",changDp);
+// change group name
+router.post("/changeUserName",changeUserName);
+// change group desc
+router.post("/changeUserDesc",changeUserAbout);
 
 
 module.exports = router
