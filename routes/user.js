@@ -13,7 +13,10 @@ const {
     getAllUser,
     changDp,
     changeUserAbout,
-    changeUserName
+    changeUserName,
+    fetchAllRequest,
+    createStatus,
+    fetchallStatus
     } = require("../controller/user");
 
 
@@ -41,6 +44,11 @@ router.post("/changeUserImage",changDp);
 router.post("/changeUserName",changeUserName);
 // change group desc
 router.post("/changeUserDesc",changeUserAbout);
-
+// fetch user reqest
+router.post("/fetchRequest",fetchAllRequest);
+// add status
+router.post("/addStatus",createStatus);
+// fetch all status
+router.post("/fetchAllStatus",fetchallStatus)
 
 module.exports = router

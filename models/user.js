@@ -51,7 +51,16 @@ allUser:[{
 isGroup:{
     type:Boolean,
     default:false
-}
+},
+request:[{
+    type:mongoose.Schema.Types.ObjectId,
+    ref:"User"
+}],
+status : [{
+    type:mongoose.Schema.Types.ObjectId,
+    ref:"Status"
+}],
+
 })
 
 module.exports = mongoose.model("User",userSchema)

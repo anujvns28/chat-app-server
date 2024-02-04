@@ -1,4 +1,5 @@
-const User = require("../models/user")
+const User = require("../models/user");
+const Status = require("../models/status")
 const { uploadImageToCloudinary } = require("../utils/imageUploader")
 const sendMail = require("../utils/mailSender")
 
@@ -52,6 +53,12 @@ exports.sendFraindRequest = async(req,res) =>{
                 message: "Can not Send fraind request"
             })
         }
+
+        await User.findByIdAndUpdate(fraind._id,{
+            $push : {
+            request : userId
+            }
+        },{new:true})
 
         sendMail(email,`Fraind Request from ${email}`,url)
 
@@ -158,7 +165,13 @@ try{
         })
     }
 
-    const user = await User.findById(userId).populate("contact").exec();
+    const user = await User.findById(userId).populate({
+        path : "contact",
+        populate : {
+        path : "status"
+        }
+    }).exec();
+
     if(!user){
         return res.status(400).json({
             success:false,
@@ -606,3 +619,124 @@ exports.changeUserAbout = async(req,res) => {
     }
 }
 
+//fetcha all requies
+exports.fetchAllRequest = async(req,res) => {
+    try{
+  const {userId} = req.body;
+  console.log(userId,"printig req body")
+
+  const user = await User.findById(userId).populate("request").exec();
+
+  if(!user){
+    return res.status(500).json({
+        success:false,
+        message:"You are not vallied user",
+      
+    })
+  }
+
+  return res.status(200).json({
+    success:true,
+    message:"Request feteched sucessfully",
+    data:user.request
+  })
+
+
+    }catch(err){
+        console.log(err);
+        return res.status(500).json({
+            success: false,
+            message: "Error occured in fetching reqests"
+        })  
+    }
+}
+
+//create status
+exports.createStatus = async(req,res) => {
+    try{
+    const {userId,label,fileType} = req.body;
+    
+    const file = req.files.file
+
+    console.log(userId,label,fileType,file)
+
+    if(!userId || !fileType){
+         return res.status(500).json({
+            success:false,
+            message:"all filds are required"
+    })
+    }
+
+    const user = await User.findById(userId);
+
+  if(!user){
+    return res.status(500).json({
+        success:false,
+        message:"You are not vallied user",
+      
+    })
+  }
+
+  const img = await uploadImageToCloudinary(file);
+ 
+  const statusPayload = {
+    label:label ? label : null,
+    fileUrl:img.secure_url,
+    fileType:fileType,
+    userId:userId
+  }
+
+  const status = await Status.create(statusPayload);
+
+  const userData = await User.findByIdAndUpdate(userId,{
+    $push : {
+        status : status
+    }
+  })
+
+  return res.status(200).json({
+    success:true,
+    message:"Status add successfully",
+    data : userData
+  })
+
+    }catch(err){
+        console.log(err);
+        return res.status(500).json({
+            success: false,
+            message: "Error occured in creating status"
+        }) 
+    }
+}
+
+// fetch user all status
+exports.fetchallStatus = async(req,res) => {
+    try{
+    const {userId} = req.body
+
+    const user = await User.findById(userId);
+
+    if(!user){
+        return res.status(500).json({
+            success:false,
+            message:"You are not vallied user",
+          
+        })
+      }
+
+      const status = await Status.find({userId:userId});
+
+      return res.status(200).json({
+        success:true,
+        message:"status fetched sucesfully",
+        data : status
+      })
+
+    }catch(err){
+        console.log(err);
+        return res.status(500).json({
+            success: false,
+            message: "Error occured in creating status"
+        }) 
+    }
+}
