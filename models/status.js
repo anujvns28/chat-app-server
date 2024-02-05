@@ -16,13 +16,12 @@ const statusSchema = new mongoose.Schema({
     },
     label: {
         type:String,
-        required:true,
     },
-    // createdAt:{
-    //     type:Date,
-    //     default:Date.now,
-        
-    // }
+    createdAt:{
+        type:Date,
+        default:Date.now,
+        exexpires:24*60*60
+    }
 
 })
 

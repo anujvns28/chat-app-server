@@ -16,7 +16,8 @@ const {
     changeUserName,
     fetchAllRequest,
     createStatus,
-    fetchallStatus
+    fetchallStatus,
+    deleteStatus
     } = require("../controller/user");
 
 
@@ -49,6 +50,8 @@ router.post("/fetchRequest",fetchAllRequest);
 // add status
 router.post("/addStatus",createStatus);
 // fetch all status
-router.post("/fetchAllStatus",fetchallStatus)
+router.post("/fetchAllStatus",fetchallStatus);
+// delete status
+router.post("/deleteStatus",deleteStatus);
 
 module.exports = router

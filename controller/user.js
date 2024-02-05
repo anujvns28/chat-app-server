@@ -740,3 +740,47 @@ exports.fetchallStatus = async(req,res) => {
         }) 
     }
 }
+
+// delete user Status
+exports.deleteStatus = async(req,res) => {
+    try{
+    const {userId,statusId} = req.body;
+    
+    if(!userId || !statusId){
+        return res.status(500).json({
+            success:false,
+            message:"All filds required"
+        })
+    }
+    
+    const user = await User.findById(userId);
+
+    if(!user){
+        return res.status(500).json({
+            success:false,
+            message:"You are not vallied user",
+          
+        })
+    }
+
+    await Status.findByIdAndDelete(statusId);
+
+    await User.findByIdAndUpdate(userId,{
+        $pull : {
+            status : statusId
+        }
+    },{new:true})
+    
+    return res.status(200).json({
+        success:true,
+        message:"Status deleted sucessfully"
+    })
+
+    }catch(err){
+        console.log(err);
+        return res.status(500).json({
+            success: false,
+            message: "Error occured in deleting stats status"
+        })  
+    }
+}
