@@ -85,6 +85,7 @@ exports.sendOtp = async(req,res) =>{
         return res.status(500).json({
             success: false,
             message: "error occuring in genrating otp",
+            data : err
         })
     }
 }
@@ -242,6 +243,7 @@ const hasedPassword = await bcrypt.hash(password, 10)
             return res.status(500).json({
                 success: false,
                 message: "error occuring in doing login",
+                data : err
             })
         }
     }

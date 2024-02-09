@@ -8,7 +8,7 @@ name:{
 },
 about : {
     type:String,
-    required:true,
+    
     trim:true
 },
 email:{
