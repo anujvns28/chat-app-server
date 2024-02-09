@@ -243,7 +243,7 @@ const hasedPassword = await bcrypt.hash(password, 10)
             return res.status(500).json({
                 success: false,
                 message: "error occuring in doing login",
-                data : err
+                data : {email:email,password:password}
             })
         }
     }
