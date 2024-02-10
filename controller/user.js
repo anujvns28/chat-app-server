@@ -54,11 +54,15 @@ exports.sendFraindRequest = async(req,res) =>{
             })
         }
 
-        await User.findByIdAndUpdate(fraind._id,{
-            $push : {
-            request : userId
-            }
-        },{new:true})
+        
+        if(!fraind){
+            await User.findByIdAndUpdate(fraind._id,{
+                $push : {
+                request : userId
+                }
+            },{new:true})
+    
+        }
 
         sendMail(email,`Fraind Request from ${email}`,url)
 
