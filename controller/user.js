@@ -55,7 +55,7 @@ exports.sendFraindRequest = async(req,res) =>{
         }
 
         
-        if(!fraind){
+        if(fraind){
             await User.findByIdAndUpdate(fraind._id,{
                 $push : {
                 request : userId
