@@ -156,6 +156,35 @@ exports.acceptFraindRequest = async(req,res) => {
     }
 }
 
+//fetching fraind request sender data
+exports.getSenderRequestData = async(req,res) =>{
+    try{
+    const tokenId = req.body.token;
+
+    if(!tokenId){
+        return res.status(500).json({
+            success:false,
+            message:"Token is required"
+        })
+    }
+
+    const user = await User.findOne({token:tokenId})
+
+    return res.status(200).json({
+        success:true,
+        message:"fetched Successfully",
+        data : user
+    })
+    
+    }catch(err){
+        console.log(err)
+        return res.status(400).json({
+            success:false,
+            message:"Error occuring in fetching fraind request data"
+        }) 
+    }
+}
+
 // get all user in contact list
 exports.getAllContact = async(req,res) => {
 try{

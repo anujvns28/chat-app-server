@@ -17,7 +17,8 @@ const {
     fetchAllRequest,
     createStatus,
     fetchallStatus,
-    deleteStatus
+    deleteStatus,
+    getSenderRequestData
     } = require("../controller/user");
 
 
@@ -25,6 +26,8 @@ const {
 router.post("/sendRequest",sendFraindRequest)
 // accept reques
 router.post("/acceptRequest",acceptFraindRequest)
+// fetch send fraind requst data
+router.post("/requestUserData",getSenderRequestData)
 // fetch contact
 router.post("/fetchContact",getAllContact)
 // block conatac
