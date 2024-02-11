@@ -7,11 +7,11 @@ exports.createGroup = async (req, res) => {
     try {
         //fetching data
         console.log("habibi come to banars")
-        const { groupName, members, groupDesc, userId } = req.body;
+        const { groupName, members,  userId } = req.body;
 
 
         //vallidation
-        if (!groupName || !members || !groupDesc || !userId) {
+        if (!groupName || !members  || !userId) {
             return res.status(500).json({
                 success: false,
                 message: "All fild are required"
@@ -38,7 +38,7 @@ exports.createGroup = async (req, res) => {
         // create grooup
         const groupPayload = {
             groupName: groupName,
-            groupDesc: groupDesc,
+            groupDesc: groupDesc ? groupDes : null,
             members: members,
             groupImg: imageUrl,
             admin: userId,

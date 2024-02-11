@@ -200,7 +200,11 @@ const hasedPassword = await bcrypt.hash(password, 10)
                 })
             }
             // user is resjusterd or not
-            const user = await User.findOne({ email: email });
+            const user = await User.findOne({ email: email })
+            .populate("contact")
+            .populate("group")
+            .exec();
+            
             if (!user) {
                 return res.status(500).json({
                     success: false,
