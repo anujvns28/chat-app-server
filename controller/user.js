@@ -125,12 +125,12 @@ exports.acceptFraindRequest = async(req,res) => {
         
 
     //update sender
-    await User.findOneAndUpdate({token:token},{
+ const userData =    await User.findOneAndUpdate({token:token},{
         $push : {
            contact : userId,
            allUser : userId 
         }
-    },{new:true})
+    },{new:true}).populate("contact").populate("group").exec();
 
     //update reciver
     const senderId = sender._id
@@ -143,7 +143,8 @@ exports.acceptFraindRequest = async(req,res) => {
 
     return res.status(200).json({
         success:true,
-        message:"Accepted Request"
+        message:"Accepted Request",
+        data : userData
     })
        
 
@@ -644,6 +645,8 @@ exports.changeUserAbout = async(req,res) => {
         message : "user desc updated successfull",
         data : userData
     })
+
+
 
     }catch (err) {
         console.log(err);
