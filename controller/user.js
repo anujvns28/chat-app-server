@@ -125,21 +125,21 @@ exports.acceptFraindRequest = async(req,res) => {
         
 
     //update sender
- const userData =    await User.findOneAndUpdate({token:token},{
+    await User.findOneAndUpdate({token:token},{
         $push : {
            contact : userId,
            allUser : userId 
         }
-    },{new:true}).populate("contact").populate("group").exec();
+    },{new:true})
 
     //update reciver
     const senderId = sender._id
-    await User.findByIdAndUpdate(userId,{
+    const userData =   await User.findByIdAndUpdate(userId,{
         $push : {
            contact : senderId,
            allUser : senderId
         }
-    },{new:true})
+    },{new:true}).populate("contact").populate("group").exec();
 
     return res.status(200).json({
         success:true,
