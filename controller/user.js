@@ -552,7 +552,7 @@ exports.changDp = async(req,res) => {
 
     const userData = await User.findByIdAndUpdate(userId,{
         image : img.secure_url
-    },{new:true})
+    },{new:true}).populate("contact").populate("group").exec();
 
     return res.status(200).json({
         success:true,
@@ -594,7 +594,8 @@ exports.changeUserName = async(req,res) => {
 
   const userData =  await User.findByIdAndUpdate(userId,{
        name : userName
-    },{new:true})
+    },{new:true}).populate("contact").populate("group").exec();
+
 
     return res.status(200).json({
         success:true,
@@ -635,7 +636,8 @@ exports.changeUserAbout = async(req,res) => {
 
   const userData =  await User.findByIdAndUpdate(userId,{
        about : about 
-    },{new:true})
+    },{new:true}).populate("contact").populate("group").exec();
+
 
     return res.status(200).json({
         success:true,
