@@ -243,11 +243,11 @@ exports.exitUser = async(req,res) => {
        }
    
        // pull user id in block array
-       await User.findByIdAndUpdate(userId,{
+    const userInfo =   await User.findByIdAndUpdate(userId,{
            $pull : {
               group : groupId
            }
-       },({new:true}))
+       },({new:true})).populate("contact").populate("group").exec();
 
        // pull userid in group member section
        await Group.findByIdAndUpdate(groupId,{
@@ -259,6 +259,7 @@ exports.exitUser = async(req,res) => {
        return res.status(200).json({
            success : true,
            message : " you are successfull exist in the group",
+           data : userInfo
        })
    
     }catch(err){

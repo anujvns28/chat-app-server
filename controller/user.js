@@ -260,11 +260,11 @@ exports.blockUser = async(req,res) => {
     }
 
     // push user id in block array
-    await User.findByIdAndUpdate(userId,{
+const userInfo =     await User.findByIdAndUpdate(userId,{
         $push : {
            block :  {user: chatId, isYouBlock : true}
         }
-    },({new:true}))
+    },({new:true})).populate("contact").populate("group").exec();
 
     await User.findByIdAndUpdate(chatId,{
         $push : {
@@ -276,7 +276,7 @@ exports.blockUser = async(req,res) => {
     return res.status(200).json({
         success : true,
         message : "User blocked successfull",
-       
+        data : userInfo
     })
 
 
@@ -321,11 +321,11 @@ exports.unBlockUser = async(req,res) => {
     }
 
     // push user id in block array
-    await User.findByIdAndUpdate(userId,{
+const userInfo =   await User.findByIdAndUpdate(userId,{
         $pull : {
            block : {user : chatId} 
         }
-    },({new:true}))
+    },({new:true})).populate("contact").populate("group").exec();
 
     await User.findByIdAndUpdate(chatId,{
         $pull : {
@@ -338,7 +338,7 @@ exports.unBlockUser = async(req,res) => {
     return res.status(200).json({
         success : true,
         message : "User unblocked successfull",
-       
+       data : userInfo
     })
 
 
@@ -408,15 +408,16 @@ exports.deleteUser = async(req,res) => {
        }
    
        // pull user id in block array
-       await User.findByIdAndUpdate(userId,{
+    const userInfo =   await User.findByIdAndUpdate(userId,{
            $pull : {
               contact : chatId
            }
-       },({new:true}))
+       },({new:true})).populate("contact").populate("group").exec();
        
        return res.status(200).json({
            success : true,
            message : "User deleted successfull",
+           data : userInfo
        })
    
     }catch(err){
@@ -467,22 +468,23 @@ exports.addUserInConatact = async(req,res) => {
        }
    
        // puss user id in block array
-       await User.findByIdAndUpdate(userId,{
+     const updatedData =   await User.findByIdAndUpdate(userId,{
            $push : {
               contact : chatId
            }
-       },({new:true}))
+       },({new:true})).populate("contact").populate("group").exec();
        
        return res.status(200).json({
            success : true,
-           message : "User deleted successfull",
+           message : "User Added successfully",
+           data : updatedData
        })
    
     }catch(err){
         console.log(err)
         return res.status(500).json({
             success: false,
-            message: "error occuring in Deleting  user",
+            message: "error occuring in adding user",
         })  
     }
 } 
