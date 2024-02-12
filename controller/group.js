@@ -7,8 +7,7 @@ exports.createGroup = async (req, res) => {
     try {
         //fetching data
         console.log("habibi come to banars")
-        const { groupName, members,  userId } = req.body;
-
+        const { groupName, members,  userId,groupDesc } = req.body;
 
         //vallidation
         if (!groupName || !members  || !userId) {
@@ -38,7 +37,7 @@ exports.createGroup = async (req, res) => {
         // create grooup
         const groupPayload = {
             groupName: groupName,
-            groupDesc: groupDesc ? groupDes : null,
+            groupDesc: groupDesc ? groupDesc : null,
             members: members,
             groupImg: imageUrl,
             admin: userId,
@@ -55,13 +54,15 @@ exports.createGroup = async (req, res) => {
             }, { new: true })
         })
 
+        const userData = await User.findById(userId).populate("contact").populate("group").exec();
+
 
 
 
         return res.status(200).json({
             success: true,
             message: "group created",
-            data: group
+            data: userData
         })
 
     } catch (err) {
