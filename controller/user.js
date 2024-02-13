@@ -353,7 +353,7 @@ const userInfo =   await User.findByIdAndUpdate(userId,{
 
 exports.getUser = async(req,res) =>{
     try{
-   const userId = req.body.userId;
+   const {userId} = req.body;
    if(!userId){
     return res.status(500).json({
         success:false,
