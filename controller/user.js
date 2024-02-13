@@ -354,10 +354,23 @@ const userInfo =   await User.findByIdAndUpdate(userId,{
 exports.getUser = async(req,res) =>{
     try{
    const userId = req.body.userId;
+   if(!userId){
+    return res.status(500).json({
+        success:false,
+        message:"userId is required"
+    })
+   }
 
-   const user = await User.findById(userId).populate("contact").exec();
+   const user = await User.findById(userId).populate("contact").populate("group").exec();
 
-   console.log(user)
+   if(!user){
+    if(!userId){
+        return res.status(500).json({
+            success:false,
+            message:"You are not vallied user"
+        })
+       }
+   }
 
    
    return res.status(200).json({
