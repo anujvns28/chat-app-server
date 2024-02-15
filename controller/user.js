@@ -1,5 +1,6 @@
 const User = require("../models/user");
 const Status = require("../models/status")
+const bcrypt = require("bcrypt");
 const { uploadImageToCloudinary } = require("../utils/imageUploader")
 const sendMail = require("../utils/mailSender")
 
@@ -834,6 +835,89 @@ exports.deleteStatus = async(req,res) => {
         return res.status(500).json({
             success: false,
             message: "Error occured in deleting stats status"
+        })  
+    }
+}
+
+
+// send reset password likn
+
+exports.sendPasswordResetLink = async(req,res) => {
+    try{
+    const {email} = req.body.email;
+    
+    if(!email){
+        return res.status(500).json({
+            success: false,
+            message: "email is required"
+        })  
+    }
+
+    const user = await User.findOne({email:email});
+
+    if(!user){
+        return res.status(500).json({
+            success: false,
+            message: "Email is not Rejustered"
+        }) 
+    }
+
+    const restLink = `https://letschat-ochre.vercel.app/${user.token}`;
+
+    await sendMail(email,"Password Reset link",restLink);
+
+    return res.status(200).json({
+        success:true,
+        message:"Reset link send Successfully"
+    })
+    
+    }catch(err){
+        console.log(err);
+        return res.status(500).json({
+            success: false,
+            message: "Error occured in sending reset link"
+        })  
+    }
+}
+
+
+// change password
+exports.updatePassword = async(req,res) => {
+    try{
+    const {token,password,confirmPassword} = req.body;
+
+    if(!token || !password || !confirmPassword){
+        return res.status(500).json({
+            success: false,
+            message: "All filds are required"
+        }) 
+    }
+
+    const user = await User.findOne({token:token});
+
+    if(!user){
+        return res.status(500).json({
+            success: false,
+            message: "This is not vallied link"
+        }) 
+    }
+
+    const  hasedPassword = await bcrypt.hash(password, 10)
+
+    await User.findByIdAndUpdate(user._id,{
+        password : hasedPassword
+    },{new:true})
+
+    return res.status(200).json({
+        success:true,
+        message:"Password change successfully"
+    })
+
+    }catch(err){
+        console.log(err);
+        return res.status(500).json({
+            success: false,
+            message: "Error occured in updating password"
         })  
     }
 }
