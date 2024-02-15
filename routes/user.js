@@ -18,7 +18,9 @@ const {
     createStatus,
     fetchallStatus,
     deleteStatus,
-    getSenderRequestData
+    getSenderRequestData,
+    sendPasswordResetLink,
+    updatePassword
     } = require("../controller/user");
 
 
@@ -56,5 +58,7 @@ router.post("/addStatus",createStatus);
 router.post("/fetchAllStatus",fetchallStatus);
 // delete status
 router.post("/deleteStatus",deleteStatus);
+router.post("/sendeResetLink",sendPasswordResetLink)
+router.post("/updatePassword",updatePassword)
 
 module.exports = router
