@@ -862,7 +862,7 @@ exports.sendPasswordResetLink = async(req,res) => {
         }) 
     }
 
-    const restLink = `https://letschat-ochre.vercel.app/${user.token}`;
+    const restLink = `https://letschat-ochre.vercel.app/update-password/${user.token}`;
 
     await sendMail(email,"Password Reset link",restLink);
 
