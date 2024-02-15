@@ -71,7 +71,7 @@ exports.fetchGroupChat = async(req,res) => {
     
     let messages = await Groupchat.find({
         groupId : chat
-    });
+    }).populate("senderId").exec();
 
     return res.status(200).json({
         success:true,

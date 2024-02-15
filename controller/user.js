@@ -844,7 +844,7 @@ exports.deleteStatus = async(req,res) => {
 
 exports.sendPasswordResetLink = async(req,res) => {
     try{
-    const {email} = req.body.email;
+    const {email} = req.body;
     
     if(!email){
         return res.status(500).json({
