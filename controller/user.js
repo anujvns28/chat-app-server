@@ -899,6 +899,7 @@ exports.updatePassword = async(req,res) => {
         return res.status(500).json({
             success: false,
             message: "This is not vallied link"
+            
         }) 
     }
 
