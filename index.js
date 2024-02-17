@@ -55,7 +55,7 @@ server.listen(PORT, () => {
 
 const io = new Server(server, {
     cors: {
-      origin: "https://letschat-ochre.vercel.app",
+      origin: "http://localhost:3000",
       methods: ["GET", "POST"],
       credentials: true,
     },
